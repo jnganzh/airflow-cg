@@ -6,13 +6,13 @@ workflows:
   build-and-deploy:
     jobs:
       - aws-ecr/build_and_push_image:
-          account-url: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-          repo: "${AWS_RESOURCE_NAME_PREFIX}"
-          region: ${AWS_DEFAULT_REGION}
-          tag: "${CIRCLE_SHA1}"
-          build-arg-keys: "COMPOSE_PROJECT_NAME,COMPOSE_FILE" # Add build arguments for docker-compose
-          build-args: "${AWS_RESOURCE_NAME_PREFIX},docker-compose.yml" # Pass values for the build arguments
-          extra_build_arguments: "--push" # Push the built image directly from docker-compose
+          account-url: AWS_ACCOUNT_ID.dkr.ecr.AWS_DEFAULT_REGION.amazonaws.com  # Remove ${...}
+          repo: AWS_RESOURCE_NAME_PREFIX  # Remove ${...}
+          region: AWS_DEFAULT_REGION       # Remove ${...}
+          tag: CIRCLE_SHA1
+          build-arg-keys: "COMPOSE_PROJECT_NAME,COMPOSE_FILE"
+          build-args: AWS_RESOURCE_NAME_PREFIX,docker-compose.yml
+          extra_build_arguments: "--push"
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build_and_push_image
